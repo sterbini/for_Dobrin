@@ -1,5 +1,6 @@
 # %% using /mnt/hdd1/sterbini/for_Dobrin/miniforge
 1+1
+
 # %% Import json file
  
 import xtrack as xt
@@ -62,7 +63,7 @@ for elem_name in bbcw_elements:
 
 lhcb1.ref['i_wire.a.4l1.b1'].xdeps.info(limit=None)
 
-lhcb1.element_refs['bbcw.a.4l1.b1'].post_subtract_py.xdeps.info(limit=None)
+lhcb1.element_refs['bbcw.a.4l1.b1'].post_subtract_px.xdeps.info(limit=None)
 
 lhcb1.ref['knl_0_wire.a.4l1.b1'].xdeps.info(limit=None)
 
@@ -75,10 +76,13 @@ lhcb1['co_x_wire.a.4l1.b1']
 
 # %%
 
-lhcb1['on_x1'] = 0
+lhcb1['on_x1'] = 160
 
 lhcb1.ref['i_wire.a.4l1.b1'] = 0
 lhcb1.ref['i_wire.b.4l1.b1'] = 0
+
+lhcb1.ref['d_wire.a.4l1.b1'] = 0.007
+lhcb1.ref['d_wire.b.4l1.b1'] = 0.007
 
 
 def print_wire_currents(lhcb1, wire_names):
@@ -89,16 +93,27 @@ def print_wire_currents(lhcb1, wire_names):
    
 print_wire_currents(lhcb1, ['i_wire.a.4l1.b1','i_wire.b.4l1.b1','i_wire.a.4l5.b1','i_wire.b.4l5.b1'])
 
+aux = lhcb1.twiss4d()
+
+lhcb1['co_x_wire.a.4l1.b1'] = aux['x','bbcw.a.4l1.b1']
+lhcb1['co_x_wire.b.4l1.b1'] = aux['x','bbcw.b.4l1.b1']
+lhcb1['co_y_wire.a.4l1.b1'] = aux['y','bbcw.a.4l1.b1']
+lhcb1['co_y_wire.b.4l1.b1'] = aux['y','bbcw.b.4l1.b1']   
+
+
 tw_zero_current  = lhcb1.twiss4d()
+
+
 
 lhcb1.ref['i_wire.a.4l1.b1'] = 100
 lhcb1.ref['i_wire.b.4l1.b1'] = 100
 
-print(lhcb1.element_refs['bbcw.a.4l1.b1'].post_subtract_py.xdeps.value)
-print(lhcb1.element_refs['bbcw.b.4l1.b1'].post_subtract_py.xdeps.value)
+#print(lhcb1.element_refs['bbcw.a.4l1.b1'].post_subtract_py.xdeps.value)
+#print(lhcb1.element_refs['bbcw.b.4l1.b1'].post_subtract_py.xdeps.value)
 
 print_wire_currents(lhcb1, ['i_wire.a.4l1.b1','i_wire.b.4l1.b1','i_wire.a.4l5.b1','i_wire.b.4l5.b1'])
 
+lhcb1.twiss4d()
 
 tw_100_current  = lhcb1.twiss4d()
 
